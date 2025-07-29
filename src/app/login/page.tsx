@@ -12,12 +12,15 @@ import toast from "react-hot-toast";
 import { APP_ROUTES } from "@/utils/route";
 
 type LoginFormInputs = {
-  username: string;
+  emailAddress: string;
   password: string;
 };
 
 const loginSchema = yup.object({
-  username: yup.string().required("Username is required"),
+  emailAddress: yup
+    .string()
+    .email("Invalid email address")
+    .required("Email address is required"),
   password: yup.string().required("Password is required"),
 });
 
@@ -34,16 +37,17 @@ export default function LoginPage() {
   });
 
   useEffect(() => {
-    if (user) router.push("/dashboard");
+    if (user) router.push(APP_ROUTES.dashboard);
   }, [user, router]);
 
   const onSubmit = async (data: LoginFormInputs) => {
-    const success = await login(data.username, data.password);
+    const success = await login(data.emailAddress, data.password);
+
     if (success) {
       toast.success("Logged in successfully!");
-      router.push("/dashboard");
+      router.replace(APP_ROUTES.dashboard);
     } else {
-      toast.error("Invalid username or password!");
+      toast.error("Invalid email or password!");
     }
   };
 
@@ -54,18 +58,18 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
           <div className={styles.formGroup}>
-            <label htmlFor="username" className={styles.label}>
-              Username  <span className={styles.required}>*</span>
+            <label htmlFor="emailAddress" className={styles.label}>
+              Email Address <span className={styles.required}>*</span>
             </label>
             <input
-              id="username"
-              type="text"
-              placeholder="Enter your username"
-              {...register("username")}
+              id="emailAddress"
+              type="email"
+              placeholder="Enter your email"
+              {...register("emailAddress")}
               className={styles.input}
             />
-            {errors.username && (
-              <p className={styles.error}>{errors.username.message}</p>
+            {errors.emailAddress && (
+              <p className={styles.error}>{errors.emailAddress.message}</p>
             )}
           </div>
 
@@ -86,7 +90,7 @@ export default function LoginPage() {
           </div>
 
           <button type="submit" className={`${styles.button} ${styles.green}`}>
-            Register
+            Login
           </button>
 
           <p className={styles.linkText}>

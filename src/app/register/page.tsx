@@ -13,12 +13,17 @@ import { APP_ROUTES } from "@/utils/route";
 
 type RegisterFormInputs = {
   username: string;
+  emailAddress: string;
   password: string;
   confirmPassword: string;
 };
 
 const registerSchema = yup.object({
   username: yup.string().required("Username is required"),
+  emailAddress: yup
+    .string()
+    .email("Invalid email address")
+    .required("Email address is required"),
   password: yup
     .string()
     .min(4, "Password must be at least 4 characters")
@@ -42,16 +47,16 @@ export default function RegisterPage() {
   });
 
   useEffect(() => {
-    if (user) router.push("/dashboard");
+    if (user) router.replace(APP_ROUTES.dashboard);
   }, [user, router]);
 
   const onSubmit = async (data: RegisterFormInputs) => {
-    const success = await signup(data.username, data.password);
+    const success = await signup(data.username, data.password, data.emailAddress);
     if (success) {
       toast.success("Account created successfully!");
-      router.push("/dashboard");
+      router.replace(APP_ROUTES.dashboard);
     } else {
-      toast.error("Username already exists!");
+      toast.error("Email already exists!");
     }
   };
 
@@ -75,6 +80,22 @@ export default function RegisterPage() {
               <p className={styles.error}>{errors.username.message}</p>
             )}
           </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="emailAddress" className={styles.label}>
+              Email Address <span className={styles.required}>*</span>
+            </label>
+            <input
+              type="email"
+              placeholder="Email Address"
+              {...register("emailAddress")}
+              className={styles.input}
+            />
+            {errors.emailAddress && (
+              <p className={styles.error}>{errors.emailAddress.message}</p>
+            )}
+          </div>
+
           <div className={styles.formGroup}>
             <label htmlFor="password" className={styles.label}>
               Password <span className={styles.required}>*</span>
@@ -89,6 +110,7 @@ export default function RegisterPage() {
               <p className={styles.error}>{errors.password.message}</p>
             )}
           </div>
+
           <div className={styles.formGroup}>
             <label htmlFor="confirmPassword" className={styles.label}>
               Confirm Password <span className={styles.required}>*</span>
