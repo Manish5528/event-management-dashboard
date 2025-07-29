@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "title": "React Workshop",
+    "description": "A hands-on workshop to learn React.js fundamentals.",
+    "eventType": "Online",
+    "location": "",
+    "eventLink": "https://zoom.us/react-workshop",
+    "startDateTime": "2025-07-28T10:00",
+    "endDateTime": "2025-07-28T13:00",
+    "category": "Workshop",
+    "organizer": "john"
+  },
+  {
+    "id": "2",
+    "title": "Tech Conference 2025",
+    "description": "An in-person conference discussing new tech trends.",
+    "eventType": "In-Person",
+    "location": "San Francisco Convention Center",
+    "eventLink": "",
+    "startDateTime": "2025-08-05T09:00",
+    "endDateTime": "2025-08-05T17:00",
+    "category": "Conference",
+    "organizer": "alice"
+  },
+  {
+    "id": "3",
+    "title": "AI Seminar",
+    "description": "A seminar exploring AI applications in real life.",
+    "eventType": "Online",
+    "location": "",
+    "eventLink": "https://meet.google.com/ai-seminar",
+    "startDateTime": "2025-07-30T15:00",
+    "endDateTime": "2025-07-30T17:00",
+    "category": "Seminar",
+    "organizer": "bob"
+  },
+  {
+    "id": "4",
+    "title": "Startup Meetup",
+    "description": "Networking event for startup founders and investors.",
+    "eventType": "In-Person",
+    "location": "New York City Startup Hub",
+    "eventLink": "",
+    "startDateTime": "2025-07-29T18:00",
+    "endDateTime": "2025-07-29T21:00",
+    "category": "Meetup",
+    "organizer": "sara"
+  }
+]

@@ -5,7 +5,7 @@ import {
   removeLoggedInUser,
   setLoggedInUser,
 } from "@/hooks/auth";
-import { API_ROUTES } from "@/utils/route";
+import { API_ROUTES, APP_ROUTES } from "@/utils/route";
 import React, {
   createContext,
   useContext,
@@ -35,7 +35,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-
   useEffect(() => {
     const savedUser = getLoggedInUser();
     if (savedUser) {
