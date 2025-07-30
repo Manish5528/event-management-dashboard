@@ -253,3 +253,8 @@
   background: #c62828;
 }
 
+.required {
+  color: red;
+  font-weight: bold;
+}
+

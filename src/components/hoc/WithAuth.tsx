@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/constants/appRoutes";
 import { getLoggedInUser } from "@/hooks/auth";
 
@@ -11,22 +11,35 @@ enum AuthStatus {
   Unauthenticated,
 }
 
-export function withAuth<P extends object>(
+export default function withAuth<P extends object>(
   WrappedComponent: React.ComponentType<P>
 ) {
   return function AuthenticatedComponent(props: P) {
-    const [authStatus, setAuthStatus] = useState<AuthStatus>(AuthStatus.Pending);
+    const [authStatus, setAuthStatus] = useState<AuthStatus>(
+      AuthStatus.Pending
+    );
+    const router = useRouter();
+
     useEffect(() => {
       const user = getLoggedInUser();
+
       if (!user) {
-        redirect(APP_ROUTES.login)
+        setAuthStatus(AuthStatus.Unauthenticated);
+        // Using redirect() because auth is in localStorage and no cookies exist for server-side checks.
+        // With cookies, we’d use middleware to redirect before render.
+        // router.replace() needs a timeout to avoid hydration issues.
+        redirect(APP_ROUTES.login);
       } else {
         setAuthStatus(AuthStatus.Authenticated);
       }
-    }, []);
+    }, [router]);
 
     if (authStatus === AuthStatus.Pending) {
-      return <div>Loading...</div>; 
+      return <div>Loading...</div>;
+    }
+
+    if (authStatus === AuthStatus.Unauthenticated) {
+      return <div>Redirecting to login...</div>;
     }
 
     return <WrappedComponent {...props} />;

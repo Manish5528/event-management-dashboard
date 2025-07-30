@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { removeLoggedInUser } from "@/hooks/auth";
 import EventTable from "@/components/EventTable";
 import { Event } from "@/types/event";
-import { withAuth } from "@/components/hoc/WithAuth";
+import WithAuth from "@/components/hoc/WithAuth";
 
 const DashboardPage = () => {
   const { user, setUser } = useAuth();
@@ -179,4 +179,4 @@ const DashboardPage = () => {
   );
 };
 
-export default withAuth(DashboardPage);
+export default WithAuth(DashboardPage)

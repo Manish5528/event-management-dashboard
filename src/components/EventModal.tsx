@@ -9,6 +9,7 @@ import { useEventContext } from "@/context/EventContext";
 import styles from "@/styles/Dashboard.module.css";
 import { useEffect } from "react";
 import {Event} from "@/types/event"
+import { API_ROUTES } from "@/constants/apiRoutes";
 
 const schema = yup.object({
   title: yup.string().required("Title is required"),
@@ -107,7 +108,7 @@ const EventModal: React.FC<CreateEventModalProps> = ({
       : { ...data, organizer: user?.username };
 
     const method = eventToEdit ? "PUT" : "POST";
-    const url = eventToEdit ? `/api/event` : "/api/event";
+    const url = API_ROUTES.events;
 
     const res = await fetch(url, {
       method,
@@ -132,19 +133,19 @@ const EventModal: React.FC<CreateEventModalProps> = ({
         <h2>{eventToEdit ? "Edit Event" : "Create Event"}</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-          <label>Title *</label>
+          <label>Title <span className={styles.required}>*</span></label>
           <input {...register("title")} className={styles.input} />
           {errors.title && (
             <p className={styles.error}>{errors.title.message}</p>
           )}
 
-          <label>Description *</label>
+          <label>Description <span className={styles.required}>*</span></label>
           <textarea {...register("description")} className={styles.textarea} />
           {errors.description && (
             <p className={styles.error}>{errors.description.message}</p>
           )}
 
-          <label>Event Type *</label>
+          <label>Event Type <span className={styles.required}>*</span></label>
           <select {...register("eventType")} className={styles.select}>
             <option value="">Select Type</option>
             <option value="Online">Online</option>
@@ -153,7 +154,7 @@ const EventModal: React.FC<CreateEventModalProps> = ({
 
           {eventType === "In-Person" && (
             <>
-              <label>Location *</label>
+              <label>Location <span className={styles.required}>*</span></label>
               <input {...register("location")} className={styles.input} />
               {errors.location && (
                 <p className={styles.error}>{errors.location.message}</p>
@@ -163,7 +164,7 @@ const EventModal: React.FC<CreateEventModalProps> = ({
 
           {eventType === "Online" && (
             <>
-              <label>Event Link *</label>
+              <label>Event Link <span className={styles.required}>*</span></label>
               <input {...register("eventLink")} className={styles.input} />
               {errors.eventLink && (
                 <p className={styles.error}>{errors.eventLink.message}</p>
@@ -171,14 +172,14 @@ const EventModal: React.FC<CreateEventModalProps> = ({
             </>
           )}
 
-          <label>Start Date & Time *</label>
+          <label>Start Date & Time <span className={styles.required}>*</span></label>
           <input
             type="datetime-local"
             {...register("startDateTime")}
             className={styles.input}
           />
 
-          <label>End Date & Time *</label>
+          <label>End Date & Time <span className={styles.required}>*</span></label>
           <input
             type="datetime-local"
             {...register("endDateTime")}
@@ -188,7 +189,7 @@ const EventModal: React.FC<CreateEventModalProps> = ({
                 <p className={styles.error}>{errors.endDateTime.message}</p>
               )}
 
-          <label>Category *</label>
+          <label>Category <span className={styles.required}>*</span></label>
           <select {...register("category")} className={styles.select}>
             <option value="">Select Category</option>
             <option value="Workshop">Workshop</option>

@@ -37,13 +37,37 @@
   },
   {
     "id": "1753845023214",
-    "title": "NextJS",
+    "title": "Next JS",
     "description": "Learning",
     "eventType": "Online",
     "startDateTime": "2025-08-02T08:39",
     "endDateTime": "2025-08-03T12:44",
     "category": "Seminar",
     "eventLink": "https://zoom.us/react-workshop",
-    "organizer": "manish"
+    "organizer": "manish",
+    "location": ""
+  },
+  {
+    "id": "1753882663917",
+    "title": "Python Seminar",
+    "description": "Python overview",
+    "eventType": "In-Person",
+    "startDateTime": "2025-10-09T19:07",
+    "endDateTime": "2025-10-10T19:07",
+    "category": "Seminar",
+    "location": "Ahmedabad",
+    "organizer": "Test User",
+    "eventLink": ""
+  },
+  {
+    "id": "1753882906242",
+    "title": "Developer Meetup",
+    "description": "Meetup",
+    "eventType": "In-Person",
+    "startDateTime": "2025-12-11T19:10",
+    "endDateTime": "2025-12-13T19:11",
+    "category": "Meetup",
+    "location": "Ahmedabad",
+    "organizer": "Test User"
   }
 ]

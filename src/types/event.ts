@@ -8,4 +8,5 @@ export interface Event {
   endDateTime: string;
   eventLink?: string;
   location?: string;
+  organizer :string
 }

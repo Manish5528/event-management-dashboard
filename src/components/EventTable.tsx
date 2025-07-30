@@ -28,6 +28,7 @@ const EventTable: React.FC<EventTableProps> = ({
           <th>Start Date</th>
           <th>End Date</th>
           <th>Location / Link</th>
+          <th>Organizer</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -53,6 +54,7 @@ const EventTable: React.FC<EventTableProps> = ({
                 event.location || "-"
               )}
             </td>
+             <td>{event.organizer}</td>
             <td className={styles.actionCell}>
               <div className={styles.actionButtons}>
                 <button

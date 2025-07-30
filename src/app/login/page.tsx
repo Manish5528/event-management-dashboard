@@ -9,6 +9,7 @@ import styles from "@/styles/AuthForm.module.css";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { APP_ROUTES } from "@/constants/appRoutes";
+import { useEffect } from "react";
 
 type LoginFormInputs = {
   emailAddress: string;
@@ -46,6 +47,9 @@ export default function LoginPage() {
     }
   };
 
+    useEffect(() => {
+      if (user) router.replace(APP_ROUTES.dashboard);
+    }, [user, router]);
  
   return (
     <div className={styles.wrapper}>

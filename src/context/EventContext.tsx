@@ -8,6 +8,7 @@ import React, {
   useCallback,
 } from "react";
 import { useRouter } from "next/navigation";
+import { API_ROUTES } from "@/constants/apiRoutes";
 
 type Event = {
   id: string;
@@ -80,7 +81,7 @@ useEffect(() => {
   }, [filters]);
 
   const fetchEvents = useCallback(async () => {
-    const res = await fetch("/api/event");
+    const res = await fetch(API_ROUTES.events);
     const data = await res.json();
     setEvents(data);
   }, []);
