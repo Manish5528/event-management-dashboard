@@ -30,48 +30,91 @@ const saveEvents = (events: Event[]) => {
   fs.writeFileSync(eventsFile, JSON.stringify(events, null, 2));
 };
 
+const hasConflict = (events: Event[], newStart: string, newEnd: string, ignoreId?: string) => {
+  const start = new Date(newStart).getTime();
+  const end = new Date(newEnd).getTime();
+
+  return events.some((e) => {
+    if (ignoreId && e.id === ignoreId) return false;
+    const eStart = new Date(e.startDateTime).getTime();
+    const eEnd = new Date(e.endDateTime).getTime();
+    return start < eEnd && end > eStart;
+  });
+};
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const {
-      title,
-      description,
-      eventType,
-      location,
-      eventLink,
-      startDateTime,
-      endDateTime,
-      category,
-      organizer,
-    } = body;
-
     const events = readEvents();
+
+    if (hasConflict(events, body.startDateTime, body.endDateTime)) {
+      return NextResponse.json(
+        { error: "Time conflict with another event!" },
+        { status: 400 }
+      );
+    }
 
     const newEvent: Event = {
       id: Date.now().toString(),
-      title,
-      description,
-      eventType,
-      location,
-      eventLink,
-      startDateTime,
-      endDateTime,
-      category,
-      organizer,
+      ...body,
     };
 
     events.push(newEvent);
     saveEvents(events);
 
     return NextResponse.json(newEvent, { status: 201 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
 
 export async function GET() {
-  const events = readEvents(); 
-  return NextResponse.json(events);
+  return NextResponse.json(readEvents());
 }
 
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json();
+    const { id, ...data } = body;
+
+    let events = readEvents();
+    const index = events.findIndex((e) => e.id === id);
+
+    if (index === -1) {
+      return NextResponse.json({ error: "Event not found" }, { status: 404 });
+    }
+
+    if (hasConflict(events, data.startDateTime, data.endDateTime, id)) {
+      return NextResponse.json(
+        { error: "Time conflict with another event!" },
+        { status: 400 }
+      );
+    }
+
+    events[index] = { ...events[index], ...data };
+    saveEvents(events);
+
+    return NextResponse.json(events[index]);
+  } catch {
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const { id } = await req.json();
+    let events = readEvents();
+
+    const index = events.findIndex((e) => e.id === id);
+    if (index === -1) {
+      return NextResponse.json({ error: "Event not found" }, { status: 404 });
+    }
+
+    events.splice(index, 1);
+    saveEvents(events);
+
+    return NextResponse.json({ message: "Event deleted successfully" });
+  } catch {
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}

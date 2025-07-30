@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "title": "React Workshop",
+    "title": "React Workshop1",
     "description": "A hands-on workshop to learn React.js fundamentals.",
     "eventType": "Online",
     "location": "",
@@ -15,9 +15,9 @@
     "id": "2",
     "title": "Tech Conference 2025",
     "description": "An in-person conference discussing new tech trends.",
-    "eventType": "In-Person",
-    "location": "San Francisco Convention Center",
-    "eventLink": "",
+    "eventType": "Online",
+    "location": "Earth",
+    "eventLink": "https://zoom.us/react-workshop",
     "startDateTime": "2025-08-05T09:00",
     "endDateTime": "2025-08-05T17:00",
     "category": "Conference",
@@ -36,15 +36,14 @@
     "organizer": "bob"
   },
   {
-    "id": "4",
-    "title": "Startup Meetup",
-    "description": "Networking event for startup founders and investors.",
-    "eventType": "In-Person",
-    "location": "New York City Startup Hub",
-    "eventLink": "",
-    "startDateTime": "2025-07-29T18:00",
-    "endDateTime": "2025-07-29T21:00",
-    "category": "Meetup",
-    "organizer": "sara"
+    "id": "1753845023214",
+    "title": "NextJS",
+    "description": "Learning",
+    "eventType": "Online",
+    "startDateTime": "2025-08-02T08:39",
+    "endDateTime": "2025-08-03T12:44",
+    "category": "Seminar",
+    "eventLink": "https://zoom.us/react-workshop",
+    "organizer": "manish"
   }
 ]

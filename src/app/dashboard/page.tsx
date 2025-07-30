@@ -5,28 +5,57 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import styles from "@/styles/Dashboard.module.css";
 import { useEventContext } from "@/context/EventContext";
 import { APP_ROUTES } from "@/utils/route";
+import CreateEventModal from "@/components/EventModal";
+import toast from "react-hot-toast";
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+
+  const handleCreate = () => {
+    setSelectedEvent(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEdit = (event: any) => {
+    setSelectedEvent(event);
+    setIsModalOpen(true)
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedEvent(null);
+  };
 
   useEffect(() => {
     if (!user) {
-      router.replace("/login");
+      router.replace(APP_ROUTES.login);
     }
   }, [user, router]);
 
-  if (!user) return <p>Loading...</p>;
+ 
   const { filteredEvents, filters, setFilter, fetchEvents } = useEventContext();
 
-  const handleEdit = useCallback((id: string) => {
-    // TODO: implement edit logic
-  }, []);
+  const handleDelete = async (id: string) => {
+  if (!confirm("Are you sure you want to delete this event?")) return;
 
-  const handleDelete = useCallback(async (id: string) => {
-    // TODO: implement delete logic
-  }, []);
+  const response = await fetch("/api/event", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
+
+  if (response.ok) {
+    toast.success("Event deleted successfully");
+    fetchEvents(); 
+  } else {
+    const result = await response.json();
+    toast.error(result.error || "Failed to delete event");
+  }
+};
+
 
   const formatDate = useCallback(
     (date: string) =>
@@ -82,7 +111,7 @@ export default function DashboardPage() {
                 <div className={styles.actionButtons}>
                   <button
                     className={styles.iconBtn}
-                    onClick={() => handleEdit(event.id)}
+                    onClick={() => handleEdit(event)}
                     title="Edit Event"
                   >
                     ✏️
@@ -117,7 +146,6 @@ export default function DashboardPage() {
             </div>
           </header>
 
-          {/* Filters */}
           <div className={styles.filters}>
             <div className={styles.filterGroup}>
               <label>Search</label>
@@ -185,10 +213,7 @@ export default function DashboardPage() {
               </select>
             </div>
 
-            <button
-              className={styles.createBtn}
-              onClick={() => setIsModalOpen(true)}
-            >
+            <button className={styles.createBtn} onClick={handleCreate}>
               ➕ Create Event
             </button>
           </div>
@@ -196,6 +221,15 @@ export default function DashboardPage() {
           <div className={styles.eventTableWrapper}>{eventTable}</div>
         </div>
       )}
+      {isModalOpen && (
+        <CreateEventModal
+          onClose={handleCloseModal}
+          onEventSaved={fetchEvents}
+          eventToEdit={selectedEvent} 
+        />
+      )}
     </>
   );
 }
+
+
