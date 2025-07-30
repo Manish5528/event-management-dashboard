@@ -1,11 +1,8 @@
 "use client";
 
-import {
-  getLoggedInUser,
-  removeLoggedInUser,
-  setLoggedInUser,
-} from "@/hooks/auth";
-import { API_ROUTES, APP_ROUTES } from "@/utils/route";
+import { getLoggedInUser, setLoggedInUser } from "@/hooks/auth";
+import { StoredUser } from "@/types/user";
+import { API_ROUTES } from "@/constants/apiRoutes";
 import React, {
   createContext,
   useContext,
@@ -14,27 +11,21 @@ import React, {
   ReactNode,
 } from "react";
 
-type User = {
-  username: string;
-  emailAddress: string;
-  password: string;
-};
-
 type AuthContextType = {
-  user: User | null;
+  user: StoredUser | null;
   login: (emailAddress: string, password: string) => Promise<boolean>;
   signup: (
     username: string,
     password: string,
     emailAddress: string
   ) => Promise<boolean>;
-  logout: () => void;
+  setUser: React.Dispatch<React.SetStateAction<StoredUser | null>>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<StoredUser | null>(null);
   useEffect(() => {
     const savedUser = getLoggedInUser();
     if (savedUser) {
@@ -56,8 +47,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!res.ok) return false;
 
       const data = await res.json();
-      setLoggedInUser(data.user);
-      setUser(data.user);
+      const safeUser: StoredUser = {
+        username: data.user.username,
+        emailAddress: data.user.emailAddress,
+      };
+      setLoggedInUser(safeUser);
+      setUser(safeUser);
       return true;
     } catch (error) {
       console.error("Login error:", error);
@@ -80,8 +75,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!res.ok) return false;
 
       const data = await res.json();
-      setLoggedInUser(data.user);
-      setUser(data.user);
+      const safeUser: StoredUser = {
+        username: data.user.username,
+        emailAddress: data.user.emailAddress,
+      };
+      setLoggedInUser(safeUser);
+      setUser(safeUser);
       return true;
     } catch (error) {
       console.error("Signup error:", error);
@@ -89,13 +88,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logout = () => {
-    removeLoggedInUser();
-    setUser(null);
-  };
-
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, login, signup, setUser }}>
       {children}
     </AuthContext.Provider>
   );

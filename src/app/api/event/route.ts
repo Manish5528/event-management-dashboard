@@ -1,21 +1,9 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import{Event} from "@/types/event"
 
 const eventsFile = path.join(process.cwd(), "src", "data", "events.json");
-
-type Event = {
-  id: string;
-  title: string;
-  description: string;
-  eventType: "Online" | "In-Person";
-  location?: string;
-  eventLink?: string;
-  startDateTime: string;
-  endDateTime: string;
-  category: string;
-  organizer: string;
-};
 
 const readEvents = (): Event[] => {
   if (!fs.existsSync(eventsFile)) {
@@ -77,7 +65,7 @@ export async function PUT(req: Request) {
     const body = await req.json();
     const { id, ...data } = body;
 
-    let events = readEvents();
+    const events = readEvents();
     const index = events.findIndex((e) => e.id === id);
 
     if (index === -1) {
@@ -103,7 +91,7 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const { id } = await req.json();
-    let events = readEvents();
+    const events = readEvents();
 
     const index = events.findIndex((e) => e.id === id);
     if (index === -1) {

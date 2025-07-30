@@ -5,11 +5,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useAuth } from "@/context/AuthContext";
-import { useEffect } from "react";
 import styles from "@/styles/AuthForm.module.css";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { APP_ROUTES } from "@/utils/route";
+import { APP_ROUTES } from "@/constants/appRoutes";
 
 type LoginFormInputs = {
   emailAddress: string;
@@ -36,10 +35,6 @@ export default function LoginPage() {
     resolver: yupResolver(loginSchema),
   });
 
-  useEffect(() => {
-    if (user) router.push(APP_ROUTES.dashboard);
-  }, [user, router]);
-
   const onSubmit = async (data: LoginFormInputs) => {
     const success = await login(data.emailAddress, data.password);
 
@@ -51,6 +46,7 @@ export default function LoginPage() {
     }
   };
 
+ 
   return (
     <div className={styles.wrapper}>
       <div className={styles.card}>
@@ -94,7 +90,7 @@ export default function LoginPage() {
           </button>
 
           <p className={styles.linkText}>
-            Don't have an account?{" "}
+             Sign Up?{" "}
             <Link href={APP_ROUTES.register} className={styles.link}>
               Register
             </Link>

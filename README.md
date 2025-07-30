@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+📅 Event Management Dashboard (Next.js + TypeScript)
+A simple Event Management Dashboard built with Next.js(App Router), TypeScript, and React Hook Form + Yup.
+It supports user authentication, event creation, editing, deletion, filtering, and search functionality.
 
-## Getting Started
+🚀 Features
+✅ User Authentication (LocalStorage-based) – Login, Logout, and Protected Routes
+✅ Event CRUD – Create, Update, Delete, and View Events
+✅ Event Filtering & Search – Filter events by type, category, date range, and sort order
+✅ Validation – Prevents time conflicts and invalid date ranges using Yup schema
+✅ Persistent Data – Events are stored in a JSON file (src/data/events.json)
+✅ Optimized Context – Uses React Context API to manage events globally
 
-First, run the development server:
+📂 Project Structure
+bash
+Copy
+Edit
+src/
+ ├── app/                 # App Router pages (dashboard, login, etc.)
+ ├── components/          # UI Components (CreateEventModal, etc.)
+ ├── context/             # AuthContext & EventContext
+ ├── data/events.json     # JSON file for storing events
+ ├── styles/              # CSS Modules
+ └── utils/               # Helper functions (routes, constants, etc.)
+🛠 Tech Stack
+Next.js (App Router)
 
-```bash
+React + TypeScript
+
+React Hook Form + Yup (Form validation)
+
+React Context API (Auth & Event state management)
+
+React Hot Toast (Notifications)
+
+LocalStorage (For persisting user data)
+
+File-based JSON storage (fs module)
+
+🔑 Authentication Flow
+User login is stored in LocalStorage.
+
+AuthContext provides user, login, and logout.
+
+Protected routes check user and redirect to /login if not logged in.
+
+📅 Event Features
+✅ Create/Edit Event – Uses a single modal for both operations.
+✅ Validation Rules
+
+Required title, description, and category
+
+location required for In-Person events
+
+eventLink required for Online events
+
+End Date must be after Start Date
+
+No overlapping event times allowed
+
+✅ Filter & Search – By event type, category, date range, and sort order.
+✅ JSON File Storage – Events are saved in src/data/events.json.
+
+
+🖥️ Running Locally
+1️⃣ Install dependencies
+npm install
+2️⃣ Start the dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3️⃣ Open in browser
+➡️ http://localhost:3000

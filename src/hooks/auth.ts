@@ -1,10 +1,6 @@
-const LOGGED_IN_USER_KEY = "loggedInUser";
+import { StoredUser } from "@/types/user";
 
-export type StoredUser = {
-  username: string;
-  emailAddress: string;
-  password: string;
-};
+const LOGGED_IN_USER_KEY = "loggedInUser";
 
 export const getLoggedInUser = (): StoredUser | null => {
   if (typeof window === "undefined") return null; 

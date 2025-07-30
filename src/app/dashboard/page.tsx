@@ -1,137 +1,79 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import {  useState, useCallback } from "react";
 import styles from "@/styles/Dashboard.module.css";
 import { useEventContext } from "@/context/EventContext";
-import { APP_ROUTES } from "@/utils/route";
+import { APP_ROUTES } from "@/constants/appRoutes";
 import CreateEventModal from "@/components/EventModal";
 import toast from "react-hot-toast";
+import { removeLoggedInUser } from "@/hooks/auth";
+import EventTable from "@/components/EventTable";
+import { Event } from "@/types/event";
+import { withAuth } from "@/components/hoc/WithAuth";
 
-export default function DashboardPage() {
-  const { user, logout } = useAuth();
+const DashboardPage = () => {
+  const { user, setUser } = useAuth();
   const router = useRouter();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { filteredEvents, fetchEvents, filters, setFilter } = useEventContext();
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  const handleCreate = () => {
+  const formatDate = useCallback((date: string): string => {
+    return new Date(date).toLocaleString("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+  }, []);
+
+  console.log("Dashboard")
+
+  const handleCreate = useCallback((): void => {
     setSelectedEvent(null);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleEdit = (event: any) => {
+  const handleEdit = useCallback((event: Event): void => {
     setSelectedEvent(event);
-    setIsModalOpen(true)
-  };
+    setIsModalOpen(true);
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback((): void => {
     setIsModalOpen(false);
     setSelectedEvent(null);
-  };
+  }, []);
 
-  useEffect(() => {
-    if (!user) {
-      router.replace(APP_ROUTES.login);
-    }
-  }, [user, router]);
+  const handleDelete = useCallback(
+    async (id: string): Promise<void> => {
+      if (!confirm("Are you sure you want to delete this event?")) return;
 
- 
-  const { filteredEvents, filters, setFilter, fetchEvents } = useEventContext();
+      try {
+        const response = await fetch("/api/event", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id }),
+        });
 
-  const handleDelete = async (id: string) => {
-  if (!confirm("Are you sure you want to delete this event?")) return;
-
-  const response = await fetch("/api/event", {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id }),
-  });
-
-  if (response.ok) {
-    toast.success("Event deleted successfully");
-    fetchEvents(); 
-  } else {
-    const result = await response.json();
-    toast.error(result.error || "Failed to delete event");
-  }
-};
-
-
-  const formatDate = useCallback(
-    (date: string) =>
-      new Date(date).toLocaleString("en-IN", {
-        dateStyle: "medium",
-        timeStyle: "short",
-      }),
-    []
+        if (response.ok) {
+          toast.success("Event deleted successfully");
+          fetchEvents();
+        } else {
+          const result = await response.json();
+          toast.error(result.error || "Failed to delete event");
+        }
+      } catch  {
+        toast.error("Something went wrong");
+      }
+    },
+    [fetchEvents]
   );
 
-  const eventTable = useMemo(() => {
-    if (filteredEvents.length === 0) {
-      return <p>No events found.</p>;
-    }
-
-    return (
-      <table className={styles.eventTable}>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Event Type</th>
-            <th>Category</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Location / Link</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredEvents.map((event) => (
-            <tr key={event.id}>
-              <td>{event.title}</td>
-              <td>{event.description}</td>
-              <td>{event.eventType}</td>
-              <td>{event.category}</td>
-              <td>{formatDate(event.startDateTime)}</td>
-              <td>{formatDate(event.endDateTime)}</td>
-              <td>
-                {event.eventType === "Online" && event.eventLink ? (
-                  <a
-                    href={event.eventLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {event.eventLink}
-                  </a>
-                ) : (
-                  event.location || "-"
-                )}
-              </td>
-              <td className={styles.actionCell}>
-                <div className={styles.actionButtons}>
-                  <button
-                    className={styles.iconBtn}
-                    onClick={() => handleEdit(event)}
-                    title="Edit Event"
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    className={`${styles.iconBtn} ${styles.deleteBtn}`}
-                    onClick={() => handleDelete(event.id)}
-                    title="Delete Event"
-                  >
-                    🗑
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
-  }, [filteredEvents, handleEdit, handleDelete, formatDate]);
-
+  const onLogout = useCallback((): void => {
+    setUser(null);
+    removeLoggedInUser();
+    router.replace(APP_ROUTES.login);
+  }, [router, setUser]);
   return (
     <>
       {user && (
@@ -140,7 +82,7 @@ export default function DashboardPage() {
             <h1>Event Dashboard</h1>
             <div>
               <span className={styles.user}>👤 {user.username}</span>
-              <button onClick={logout} className={styles.logout}>
+              <button onClick={onLogout} className={styles.logout}>
                 Logout
               </button>
             </div>
@@ -218,18 +160,23 @@ export default function DashboardPage() {
             </button>
           </div>
 
-          <div className={styles.eventTableWrapper}>{eventTable}</div>
+          <EventTable
+            events={filteredEvents as Event[]}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            formatDate={formatDate}
+          />
         </div>
       )}
       {isModalOpen && (
         <CreateEventModal
           onClose={handleCloseModal}
           onEventSaved={fetchEvents}
-          eventToEdit={selectedEvent} 
+          eventToEdit={selectedEvent}
         />
       )}
     </>
   );
-}
+};
 
-
+export default withAuth(DashboardPage);

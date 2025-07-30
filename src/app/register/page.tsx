@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import styles from "@/styles/AuthForm.module.css";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { APP_ROUTES } from "@/utils/route";
+import { APP_ROUTES } from "@/constants/appRoutes";
 
 type RegisterFormInputs = {
   username: string;

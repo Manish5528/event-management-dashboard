@@ -7,7 +7,7 @@ import React, {
   useState,
   useCallback,
 } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Event = {
   id: string;
@@ -43,17 +43,29 @@ const EventContext = createContext<EventContextType | null>(null);
 
 export const EventProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const [events, setEvents] = useState<Event[]>([]);
   const [filters, setFilters] = useState<Filters>({
-    search: searchParams.get("search") || "",
-    eventType: searchParams.get("eventType") || "",
-    category: searchParams.get("category") || "",
-    startDate: searchParams.get("startDate") || "",
-    endDate: searchParams.get("endDate") || "",
-    sortBy: searchParams.get("sortBy") || "",
+  search: "",
+  eventType: "",
+  category: "",
+  startDate: "",
+  endDate: "",
+  sortBy: "",
+});
+
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  setFilters({
+    search: params.get("search") || "",
+    eventType: params.get("eventType") || "",
+    category: params.get("category") || "",
+    startDate: params.get("startDate") || "",
+    endDate: params.get("endDate") || "",
+    sortBy: params.get("sortBy") || "",
   });
+}, []);
+
 
   const setFilter = useCallback((key: keyof Filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -128,7 +140,7 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
       setFilter,
       fetchEvents,
     }),
-    [events, filteredEvents, filters, fetchEvents]
+    [events, filteredEvents, filters, setFilter, fetchEvents]
   );
 
   return (

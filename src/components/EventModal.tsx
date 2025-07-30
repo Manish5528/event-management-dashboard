@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useEventContext } from "@/context/EventContext";
 import styles from "@/styles/Dashboard.module.css";
 import { useEffect } from "react";
+import {Event} from "@/types/event"
 
 const schema = yup.object({
   title: yup.string().required("Title is required"),
@@ -40,15 +41,17 @@ const schema = yup.object({
 
 type EventFormInputs = yup.InferType<typeof schema>;
 
-export default function CreateEventModal({
+interface CreateEventModalProps {
+  onClose: () => void;
+  onEventSaved: () => void;
+  eventToEdit?: Event | null;
+}
+
+const EventModal: React.FC<CreateEventModalProps> = ({
   onClose,
   onEventSaved,
   eventToEdit,
-}: {
-  onClose: () => void;
-  onEventSaved: () => void;
-  eventToEdit?: any;
-}) {
+}) => {
   const { user } = useAuth();
   const { events } = useEventContext();
 
@@ -211,3 +214,5 @@ export default function CreateEventModal({
     </div>
   );
 }
+
+export default EventModal
