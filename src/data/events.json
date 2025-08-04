@@ -36,18 +36,6 @@
     "organizer": "bob"
   },
   {
-    "id": "1753845023214",
-    "title": "Next JS",
-    "description": "Learning",
-    "eventType": "Online",
-    "startDateTime": "2025-08-02T08:39",
-    "endDateTime": "2025-08-03T12:44",
-    "category": "Seminar",
-    "eventLink": "https://zoom.us/react-workshop",
-    "organizer": "manish",
-    "location": ""
-  },
-  {
     "id": "1753882663917",
     "title": "Python Seminar",
     "description": "Python overview",
@@ -69,5 +57,39 @@
     "category": "Meetup",
     "location": "Ahmedabad",
     "organizer": "Test User"
+  },
+  {
+    "id": "1754033216480",
+    "title": "Test",
+    "description": "Test",
+    "eventType": "In-Person",
+    "startDateTime": "2026-02-06T12:56",
+    "endDateTime": "2026-02-20T12:56",
+    "category": "Seminar",
+    "location": "Ahmedabad",
+    "organizer": "manish"
+  },
+  {
+    "id": "1754033740799",
+    "title": "Test2",
+    "description": "sjfshfs",
+    "eventType": "In-Person",
+    "startDateTime": "2026-05-08T13:05",
+    "endDateTime": "2026-05-23T13:05",
+    "category": "Conference",
+    "location": "Ahmedabad",
+    "organizer": "manish"
+  },
+  {
+    "id": "1754291884592",
+    "title": "Test 88",
+    "description": "Example",
+    "eventType": "In-Person",
+    "startDateTime": "2025-03-06T09:01",
+    "endDateTime": "2025-04-12T21:33",
+    "category": "Seminar",
+    "eventLink": "",
+    "location": "Ahmedabad",
+    "organizer": "manish"
   }
 ]

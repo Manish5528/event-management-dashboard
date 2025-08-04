@@ -1,7 +1,7 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import {  useState, useCallback } from "react";
+import {  useState, useCallback, useEffect } from "react";
 import styles from "@/styles/Dashboard.module.css";
 import { useEventContext } from "@/context/EventContext";
 import { APP_ROUTES } from "@/constants/appRoutes";
@@ -69,11 +69,27 @@ const DashboardPage = () => {
     [fetchEvents]
   );
 
+  const [search, setSearch] = useState<string>('')
+  useEffect(()=>{
+    const handleDebounce = setTimeout(()=>{
+           setFilter('search',search)
+    },2000)
+
+    return ()=>{
+      clearTimeout(handleDebounce)
+    }
+  },[search])
+
   const onLogout = useCallback((): void => {
     setUser(null);
     removeLoggedInUser();
     router.replace(APP_ROUTES.login);
   }, [router, setUser]);
+
+  const handleOnview = (id:string) =>
+  {
+    router.replace(`/eventDetail/${id}`)
+  }
   return (
     <>
       {user && (
@@ -94,8 +110,8 @@ const DashboardPage = () => {
               <input
                 type="text"
                 placeholder="Search by title or description"
-                value={filters.search}
-                onChange={(e) => setFilter("search", e.target.value)}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
 
@@ -158,6 +174,7 @@ const DashboardPage = () => {
             <button className={styles.createBtn} onClick={handleCreate}>
               ➕ Create Event
             </button>
+           
           </div>
 
           <EventTable
@@ -165,6 +182,7 @@ const DashboardPage = () => {
             onEdit={handleEdit}
             onDelete={handleDelete}
             formatDate={formatDate}
+            onView={handleOnview}
           />
         </div>
       )}

@@ -7,6 +7,7 @@ export interface EventTableProps {
   onEdit: (event: Event) => void;
   onDelete: (id: string) => void;
   formatDate: (date: string) => string;
+  onView : (id : string)=>void;
 }
 
 const EventTable: React.FC<EventTableProps> = ({
@@ -14,6 +15,7 @@ const EventTable: React.FC<EventTableProps> = ({
   onEdit,
   onDelete,
   formatDate,
+  onView
 }) => {
   if (!events.length) return <p>No events found.</p>;
 
@@ -67,6 +69,14 @@ const EventTable: React.FC<EventTableProps> = ({
                 <button
                   className={`${styles.iconBtn} ${styles.deleteBtn}`}
                   onClick={() => onDelete(event.id)}
+                  title="Delete Event"
+                >
+                  🗑
+                </button>
+
+                 <button
+                  className={`${styles.iconBtn} ${styles.deleteBtn}`}
+                  onClick={() => onView(event.id)}
                   title="Delete Event"
                 >
                   🗑

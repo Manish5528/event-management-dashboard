@@ -12,7 +12,7 @@ import {Event} from "@/types/event"
 import { API_ROUTES } from "@/constants/apiRoutes";
 
 const schema = yup.object({
-  title: yup.string().required("Title is required"),
+  title: yup.string().trim().required("Title is required"),
   description: yup.string().required("Description is required"),
   eventType: yup.string().oneOf(["Online", "In-Person"]).required("Event type is required"),
   location: yup.string().when("eventType", {
@@ -54,7 +54,7 @@ const EventModal: React.FC<CreateEventModalProps> = ({
   eventToEdit,
 }) => {
   const { user } = useAuth();
-  const { events } = useEventContext();
+  const { events,setFilter } = useEventContext();
 
   const {
     register,
@@ -121,6 +121,12 @@ const EventModal: React.FC<CreateEventModalProps> = ({
     if (!res.ok) {
       toast.error(result.error || "Failed to save event");
     } else {
+      setFilter('search',"")
+      setFilter('category',"")
+      setFilter('startDate',"")
+      setFilter('endDate',"")
+      setFilter('eventType',"")
+   
       toast.success(eventToEdit ? "Event updated!" : "Event created!");
       onEventSaved();
       onClose();
@@ -209,6 +215,7 @@ const EventModal: React.FC<CreateEventModalProps> = ({
             <button type="submit" className={styles.submitBtn}>
               {eventToEdit ? "Update" : "Create"}
             </button>
+
           </div>
         </form>
       </div>
